@@ -1,9 +1,8 @@
 from datetime import datetime
 
 
-from chispa import assert_df_equality, assert_column_equality
+from chispa import assert_df_equality
 from pyspark.sql.types import StructType, StructField, StringType, LongType, IntegerType
-import pyspark.sql.functions as F
 
 from pandemic_recovery_batch import count_interactions_from_reviews
 
@@ -39,17 +38,11 @@ def test_count_reviews_schema(spark):
     expected_df = spark.createDataFrame(schema=expected_output_schema, data=[])
     assert_df_equality(reviews_df, expected_df)
 
-def df_has_row(df, row):
-    for df_row in df.collect():
-        # if desired row is a subset of the df row
-        if row.items() <= df_row.asDict().items():
-            return True
-    return False
+# allTrue = all(somePredicate(elem) for elem in someIterable)
+# anyTrue = any(somePredicate(elem) for elem in someIterable)
+
 def df_has_rows(df, rows):
-    for row in rows:
-        if not df_has_row(df, row) :
-            return False
-    return True
+    return all(any(row.items() <= df_row.asDict().items() for df_row in df.collect()) for row in rows)
 
 def test_keeps_mobile_reviews_without_checkins(spark):
     mobile_review_df = spark.createDataFrame(data=[{'business_id': 'bid', 'user_id': 'uid', 'date': '2022-04-14'}])
@@ -64,7 +57,7 @@ def test_keeps_mobile_reviews_without_checkins(spark):
 def test_does_not_count_mobile_reviews_with_checkins(spark):
     mobile_review_df = spark.createDataFrame(data=[{ 'business_id': 'bid', 'user_id': 'uid', 'date': '2022-04-14'}])
     checkin_df = spark.createDataFrame(data=[{'business_id': 'bid', 'user_id': 'uid', 'date': '2022-04-14'}])
-    __ = spark.createDataFrame(schema=mobile_review_df.schema)
+    __ = spark.createDataFrame(schema=mobile_review_df.schema, data=[])
 
     reviews_df = count_interactions_from_reviews(checkin_df, mobile_review_df, __, datetime(2022, 4, 14))
 
