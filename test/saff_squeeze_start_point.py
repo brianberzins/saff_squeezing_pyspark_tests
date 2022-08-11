@@ -4,7 +4,7 @@ from typing import List
 
 from pyspark.sql import DataFrame, SparkSession
 
-from pandemic_recovery_batch import transform
+from app.pandemic_recovery_batch import transform
 
 def test_will_do_the_right_thing(spark: SparkSession) -> None:
     b_reviews_df   = create_df_from_json("fixtures/browser_reviews.json", spark)

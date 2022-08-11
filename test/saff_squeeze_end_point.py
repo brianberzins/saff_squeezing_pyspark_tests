@@ -4,7 +4,7 @@ from typing import List
 
 from pyspark.sql import DataFrame, SparkSession
 
-from pandemic_recovery_batch import transform
+from app.pandemic_recovery_batch import transform
 
 
 def test_will_count_reviews_without_matching_checkins(spark: SparkSession) -> None:
