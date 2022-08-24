@@ -27,7 +27,7 @@ class TestDataFrame:
     def create_df(self):
         return self.spark.createDataFrame(schema=self.schema, data=self.data)
 
-    def with_data(self, rows: list[dict]):
+    def with_data(self, rows):
         self.data = rows
         return self
 
