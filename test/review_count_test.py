@@ -6,11 +6,11 @@ from pandemic_recovery_batch import count_interactions_from_reviews, create_chec
 
 
 def test_multiple_row_df_creation(spark):
-    input_df = TestDataFrame(spark).with_data(
+    input_df = spark.createDataFrame(
         [
             {'user_id': 'uid', 'date': '2000-01-02 03:04:05, 2000-01-01 04:05:06', 'business_id': 'bid'}
         ]
-    ).create_df()
+    )
     df_actual = create_checkin_df_with_one_date_per_row(input_df)
     df_expected = spark.createDataFrame(
         [
@@ -43,15 +43,3 @@ def test_foo(spark):
     #
     # # JACQUELINE Makes a new review at NOON_FRIDAY at INGLEWOOD PIZZA
     # # This should count as one review at INGLEWOOD PIZZA
-
-
-
-
-
-
-
-
-
-
-############################# SAFF SQUEEZE #################################
-
